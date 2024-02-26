@@ -1,0 +1,11 @@
+version: '3'
+services:
+    mariadb:
+        image: mariadb:10.2
+        environment:
+            MYSQL_ROOT_PASSWORD: Be2xmmsq
+        ports:
+            - 3306:3306
+        volumes:
+            - ./mariadb/data/db:/var/lib/mysql
+        container_name: compose-golang-mariadb
