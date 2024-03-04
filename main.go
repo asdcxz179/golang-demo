@@ -1,13 +1,10 @@
 package main
 
 import (
-	"fmt"
-	"mysql"
-	"news"
+	"api"
 )
 
 func main() {
-	news.Insert()
-	mysql.Connect()
-	fmt.Println("Hello, World!")
+	api.GetRouter().Run()
+	// news.GetNews()
 }

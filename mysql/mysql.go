@@ -1,13 +1,16 @@
 package mysql
 
 import (
-	"database/sql"
 	"fmt"
 	"os"
 
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/joho/godotenv"
+	"gorm.io/driver/mysql"
+	"gorm.io/gorm"
 )
+
+var db *gorm.DB
 
 func init() {
 	fmt.Println("mysql package initialized")
@@ -19,20 +22,16 @@ func init() {
 	password := os.Getenv("db_pass")
 	dbName := os.Getenv("db_name")
 	dbHost := os.Getenv("db_host")
+	dbPort := os.Getenv("db_port")
+	dsn := username + ":" + password + "@tcp(" + dbHost + ":" + dbPort + ")/" + dbName + "?charset=utf8mb4&parseTime=True&loc=Local"
+	conn, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
+	db = conn
+
+	if err != nil {
+		fmt.Println(err)
+	}
 }
 
-func Connect() {
-	db, err := sql.Open("mysql", "root:Be2xmmsq@tcp(localhost:3306)/demo")
-	if err != nil {
-		panic(err)
-	}
-	defer db.Close()
-
-	var version string
-	err = db.QueryRow("SELECT VERSION()").Scan(&version)
-	if err != nil {
-		panic(err)
-	}
-
-	fmt.Println("Connected to MySQL version:", version)
+func GetDB() *gorm.DB {
+	return db
 }
