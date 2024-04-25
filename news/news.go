@@ -34,13 +34,27 @@ func GetNews() []News {
 func (a Api) MakeApi() {
 	api.Router.GET("/news", func(c *gin.Context) {
 		c.JSON(200, gin.H{
-			"message": "Hello, World!",
+			"status":  true,
+			"message": "",
+			"data":    GetNews(),
 		})
+	}).POST("/news", func(c *gin.Context) {
+		if Insert() {
+			c.JSON(200, gin.H{
+				"status":  true,
+				"message": "新增成功",
+			})
+		} else {
+			c.JSON(200, gin.H{
+				"status":  false,
+				"message": "新增失敗",
+			})
+		}
 	})
 }
 
 func Insert() bool {
-	news := News{Title: "Hello", Content: "World", Date: time.Now().Format("2006-01-02")}
+	news := News{Title: "", Content: "World", Date: time.Now().Format("2006-01-02")}
 	result := db.Create(&news)
 	if result.Error != nil {
 		fmt.Println(result.Error)
